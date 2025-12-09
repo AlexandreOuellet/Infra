@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+#metadata:
+#  name: arbitrary
+
+# Example configuration for the webserver
+# at https://github.com/monopole/hello
+# commonLabels:
+#   app: hello
+
+resources:
+- ./longhorn/00-longhorn.yaml
+- ./longhorn/01-ingress.yaml
+
+- ./metallb/00-metallb.yaml
+
+- ./cert-manager/00-cert-manager.yaml
+- ./cert-manager/01-ClusterIssuer.yaml
+
+- ./ArgoCD/00-namespace.yaml
+- ./ArgoCD/01-argocd.yaml
+- ./ArgoCD/02-ingress.yaml
+
+- ./kubeseal/controller.yaml

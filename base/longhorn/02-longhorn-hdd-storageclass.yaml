@@ -1,0 +1,35 @@
+# Declares the longhorn-hdd StorageClass that previously only existed as
+# manual cluster drift (created via a one-off `kubectl apply`, not tracked
+# in any repo — no Helm/rio ownership annotations on the live object).
+# Capturing it here so `kubectl apply -k base/` reproduces it on a fresh
+# cluster instead of silently missing a storage class other projects
+# (e.g. the `ai` project's openviking PVC) depend on by name.
+#
+# Marked as the cluster default (see 00-longhorn.yaml's longhorn-storageclass
+# ConfigMap, where the original `longhorn` class's is-default-class was
+# flipped to "false" to match) — HDD-backed, cheaper/larger capacity, but
+# numberOfReplicas: 1 (no redundancy), unlike `longhorn`'s 3-way replication.
+# Anything provisioning a PVC without an explicit storageClassName now lands
+# here; be deliberate about setting storageClassName: longhorn explicitly
+# for anything that needs replication.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-hdd
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+parameters:
+  backupTargetName: default
+  dataEngine: v1
+  dataLocality: disabled
+  disableRevisionCounter: "true"
+  diskSelector: hdd
+  fromBackup: ""
+  fsType: ext4
+  numberOfReplicas: "1"
+  staleReplicaTimeout: "30"
+  unmapMarkSnapChainRemoved: ignored

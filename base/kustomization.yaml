@@ -11,6 +11,7 @@ kind: Kustomization
 resources:
 - ./longhorn/00-longhorn.yaml
 - ./longhorn/01-ingress.yaml
+- ./longhorn/02-longhorn-hdd-storageclass.yaml
 
 - ./metallb/00-metallb.yaml
 

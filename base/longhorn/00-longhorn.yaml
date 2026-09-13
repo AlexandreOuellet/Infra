@@ -97,7 +97,12 @@ data:
     metadata:
       name: longhorn
       annotations:
-        storageclass.kubernetes.io/is-default-class: "true"
+        # Deliberately "false" — deviation from the vendored upstream
+        # default (which ships "true" here). longhorn-hdd
+        # (02-longhorn-hdd-storageclass.yaml) is the cluster default now.
+        # If this file is ever wholesale-replaced by a newer upstream
+        # release, re-apply this change — it won't survive a blind copy.
+        storageclass.kubernetes.io/is-default-class: "false"
     provisioner: driver.longhorn.io
     allowVolumeExpansion: true
     reclaimPolicy: "Delete"

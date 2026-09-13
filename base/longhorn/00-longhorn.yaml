@@ -108,7 +108,13 @@ data:
     reclaimPolicy: "Delete"
     volumeBindingMode: Immediate
     parameters:
-      numberOfReplicas: "3"
+      # Deliberately "1" — deviation from vendored upstream (ships "3").
+      # This is a single-node cluster (see 02-longhorn-hdd-storageclass.yaml's
+      # comment); all "replicas" of a volume live on the same physical disk,
+      # so extra replicas protect against a corrupted individual replica but
+      # not against real disk/node failure — not worth 3x the storage cost
+      # here. Re-apply if this file is ever wholesale-replaced.
+      numberOfReplicas: "1"
       staleReplicaTimeout: "30"
       fromBackup: ""
       fsType: "ext4"
